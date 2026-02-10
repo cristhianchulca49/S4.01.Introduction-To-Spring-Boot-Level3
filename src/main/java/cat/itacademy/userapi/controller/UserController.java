@@ -2,7 +2,7 @@ package cat.itacademy.userapi.controller;
 
 import cat.itacademy.userapi.dto.UserDto;
 import cat.itacademy.userapi.model.User;
-import cat.itacademy.userapi.service.UserService;
+import cat.itacademy.userapi.service.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -14,9 +14,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserService service;
+    private final UserServiceImpl service;
 
-    public UserController(UserService service) {
+    public UserController(UserServiceImpl service) {
         this.service = service;
     }
 
