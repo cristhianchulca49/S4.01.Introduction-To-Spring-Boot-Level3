@@ -1,7 +1,7 @@
 package cat.itacademy.userapi.exception;
 
-public class UserAlreadyExistsException extends RuntimeException {
-    public UserAlreadyExistsException(String email) {
+public class EmailAlreadyExistsException extends RuntimeException {
+    public EmailAlreadyExistsException(String email) {
         super(String.format("User with email: %s already exists", email));
     }
 }

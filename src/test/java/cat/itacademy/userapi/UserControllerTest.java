@@ -1,14 +1,14 @@
 package cat.itacademy.userapi;
 
-import cat.itacademy.userapi.controller.UserController;
 import cat.itacademy.userapi.dto.UserDto;
 import cat.itacademy.userapi.exception.UserNotFoundException;
 import cat.itacademy.userapi.model.User;
-import cat.itacademy.userapi.service.UserService;
+import cat.itacademy.userapi.service.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,19 +21,19 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-@WebMvcTest(UserController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
     @MockitoBean
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @Test
     void getUsers_returnsEmptyListInitially() throws Exception {
-        Mockito.when(userService.getUsers(Mockito.anyString()))
+        Mockito.when(userServiceImpl.getUsers(Mockito.anyString()))
                 .thenReturn(List.of());
         mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
@@ -45,7 +45,7 @@ class UserControllerTest {
     void createUser_returnsUserWithId() throws Exception {
         User user = new User("Ada Lovelace", "ada@example.com");
 
-        Mockito.when(userService.createUser(any(UserDto.class)))
+        Mockito.when(userServiceImpl.createUser(any(UserDto.class)))
                 .thenReturn(user);
 
         mockMvc.perform(post("/users")
@@ -63,7 +63,7 @@ class UserControllerTest {
         User user = new User("Ada Lovelace", "ada@example.com");
         UUID userId = user.getId();
 
-        Mockito.when(userService.getUserById(userId))
+        Mockito.when(userServiceImpl.getUserById(userId))
                 .thenReturn(user);
 
         mockMvc.perform(get("/users/{id}", userId))
@@ -79,7 +79,7 @@ class UserControllerTest {
         UUID userId = UUID.randomUUID();
         String expectedMessage = String.format("User with id: %s not found", userId);
 
-        Mockito.when(userService.getUserById(userId))
+        Mockito.when(userServiceImpl.getUserById(userId))
                 .thenThrow(new UserNotFoundException(userId));
 
         mockMvc.perform(get("/users/{id}", userId))
@@ -96,7 +96,7 @@ class UserControllerTest {
 
         String nameSearch = "Jo";
 
-        Mockito.when(userService.getUsers(nameSearch))
+        Mockito.when(userServiceImpl.getUsers(nameSearch))
                 .thenReturn(users);
 
         mockMvc.perform(get("/users").param("name", nameSearch))
