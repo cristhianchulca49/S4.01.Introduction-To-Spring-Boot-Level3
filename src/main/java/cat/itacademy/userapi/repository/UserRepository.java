@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface UserRepository {
 
-    void save(User user);
+    User save(User user);
 
     Optional<User> findById(UUID id);
 
@@ -17,6 +17,4 @@ public interface UserRepository {
     Optional<User> findByEmail(String email);
 
     List<User> findAll();
-
-    void deleteById(UUID id);
 }
